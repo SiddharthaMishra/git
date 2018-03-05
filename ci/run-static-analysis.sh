@@ -5,6 +5,13 @@
 
 . ${0%/*}/lib-travisci.sh
 
-make coccicheck
+case "$jobname" in
+ClangStaticAnalysis)
+	scan-build -analyze-headers --status-bugs make
+	;;
+CocciStaticAnalysis)
+	make coccicheck
+	;;
+esac
 
 save_good_tree

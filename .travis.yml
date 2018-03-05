@@ -48,13 +48,28 @@ matrix:
       before_install:
       before_script:
       script: ci/run-linux32-docker.sh
-    - env: jobname=StaticAnalysis
+    - env: jobname=CocciStaticAnalysis
       os: linux
       compiler:
       addons:
         apt:
           packages:
           - coccinelle
+      before_install:
+      before_script:
+      script: ci/run-static-analysis.sh
+      after_failure:
+    - if: branch IN (master, maint)
+      env: jobname=ClangStaticAnalysis
+      os: linux
+      compiler:
+      add_ons:
+        apt:
+          sources:
+          - ubuntu-toolchain-r-test
+          - llvm-toolchain-trusty
+          packages:
+          - clang
       before_install:
       before_script:
       script: ci/run-static-analysis.sh
